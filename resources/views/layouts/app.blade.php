@@ -6,7 +6,6 @@
         <meta name="csrf-token" content="{{ csrf_token() }}">
 
         <title>@yield ('title')</title>
-
         <!-- Fonts -->
         <link rel="stylesheet" href={{asset('plugins/googleapis/css2.css')}}>
         <link href={{asset('plugins/tailwind/tailwind.min.css')}} rel="stylesheet">

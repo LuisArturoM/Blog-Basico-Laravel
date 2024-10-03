@@ -75,7 +75,7 @@
         width: 100%;
     }
 </style>
-<nav x-data="{ open: false }" class="prueba bg-white border-b h-20 border-gray-100">
+<nav x-data="{ open: false }" class="prueba bg-gray-100 shadow border-b h-20 border-gray-100">
     <!-- Primary Navigation Menu -->
     <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
         <div class="flex justify-between h-16">
@@ -252,75 +252,7 @@
                     </div>
                 @endif
 
-                <!-- Settings Dropdown -->
-                <div class="ml-3 relative">
-                    <x-jet-dropdown align="right" width="48">
-                        <x-slot name="trigger">
-                            @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
-                                <button
-                                    class="inline-flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-150 transition align-middle">
-                                    <img class="h-8 w-8 mr-2 rounded-full object-cover"
-                                        src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->rpe }}" />
-                                    {{ Auth::user()->rpe }}
-                                    <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                        viewBox="0 0 20 20" fill="currentColor">
-                                        <path fill-rule="evenodd"
-                                            d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                            clip-rule="evenodd" />
-                                    </svg>
-                                </button>
-                            @else
-                                <span class="inline-flex rounded-md">
-                                    <button type="button"
-                                        class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
-                                        {{ Auth::user()->rpe }}
 
-                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
-                                            viewBox="0 0 20 20" fill="currentColor">
-                                            <path fill-rule="evenodd"
-                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
-                                                clip-rule="evenodd" />
-                                        </svg>
-                                    </button>
-                                </span>
-                            @endif
-                        </x-slot>
-
-                        <x-slot name="content">
-                            <!-- Account Management -->
-                            <div class="block px-4 py-2 text-xs text-gray-400">
-                                {{ __('Administracion') }}
-                            </div>
-
-                            <x-jet-dropdown-link href="{{ route('users.datosPersonales') }}">
-                                {{ __('Datos personales') }}
-                            </x-jet-dropdown-link>
-
-                            <x-jet-dropdown-link href="{{ route('profile.show') }}">
-                                {{ __('Configuracion') }}
-                            </x-jet-dropdown-link>
-
-                            @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
-                                <x-jet-dropdown-link href="{{ route('api-tokens.index') }}">
-                                    {{ __('API Tokens') }}
-                                </x-jet-dropdown-link>
-                            @endif
-
-                            <div class="border-t border-gray-100"></div>
-
-                            <!-- Authentication -->
-                            <form method="POST" action="{{ route('logout') }}">
-                                @csrf
-
-                                <x-jet-dropdown-link href="{{ route('logout') }}"
-                                    onclick="event.preventDefault();
-                                                this.closest('form').submit();">
-                                    {{ __('Cerrar') }}
-                                </x-jet-dropdown-link>
-                            </form>
-                        </x-slot>
-                    </x-jet-dropdown>
-                </div>
             </div>
 
             <!-- Hamburger -->
@@ -415,5 +347,111 @@
             </div>
         </div>
     </div>
+
+    <div class="MENU">
+        <div class="hidden space-x-8 sm:flex sm:items-center sm:ml-1 justify-between h-16">
+
+                <div class="group inline-block" align="left" width="30">
+                    <button
+                        class="outline-none focus:outline-none px-3 py-1 bg-white rounded-sm flex items-center min-w-32">
+                        <span class="pr-1 font-semibold flex-1">Blog</span>
+                        <span>
+                            <svg class="fill-current h-4 w-4 transform group-hover:-rotate-180
+                    transition duration-150 ease-in-out"
+                                xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20">
+                                <path
+                                    d="M9.293 12.95l.707.707L15.657 8l-1.414-1.414L10 10.828 5.757 6.586 4.343 8z" />
+                            </svg>
+                        </span>
+                    </button>
+                    <ul class="bg-white border rounded-sm transform scale-0 group-hover:scale-100 absolute
+                    transition duration-150 ease-in-out origin-top min-w-32">
+                        <li class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <button class="w-full text-left flex items-center outline-none focus:outline-none" onclick= "window.location.href='/blog'">
+                                <span class="pr-1 flex-1">Posts</span>
+                                <span class="mr-auto">
+                                </span>
+                            </button>
+                    @if (auth()->check() && auth()->user()->rpe === 'ADMIN')
+                        <li class="rounded-sm relative px-3 py-1 hover:bg-gray-100">
+                            <button class="w-full text-left flex items-center outline-none focus:outline-none" onclick="window.location.href='/admin/posts'">
+                                <span class="pr-1 flex-1">Admin Panel</span>
+                                <span class="mr-auto">
+                                </span>
+                            </button>
+                    @endif
+                    </ul>
+    </div>
+
+                    <!-- Settings Dropdown -->
+                    <div class="ml-3 relative">
+                        <x-jet-dropdown align="right" width="48">
+                            <x-slot name="trigger">
+                                @if (Laravel\Jetstream\Jetstream::managesProfilePhotos())
+                                    <button
+                                        class="inline-flex text-sm border-2 border-transparent rounded-full focus:outline-none focus:border-gray-150 transition align-middle">
+                                        <img class="h-8 w-8 mr-2 rounded-full object-cover"
+                                            src="{{ Auth::user()->profile_photo_url }}" alt="{{ Auth::user()->rpe }}" />
+                                        {{ Auth::user()->rpe }}
+                                        <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                            viewBox="0 0 20 20" fill="currentColor">
+                                            <path fill-rule="evenodd"
+                                                d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </button>
+                                @else
+                                    <span class="inline-flex rounded-md">
+                                        <button type="button"
+                                            class="inline-flex items-center px-3 py-2 border border-transparent text-sm leading-4 font-medium rounded-md text-gray-500 bg-white hover:text-gray-700 focus:outline-none transition">
+                                            {{ Auth::user()->rpe }}
+    
+                                            <svg class="ml-2 -mr-0.5 h-4 w-4" xmlns="http://www.w3.org/2000/svg"
+                                                viewBox="0 0 20 20" fill="currentColor">
+                                                <path fill-rule="evenodd"
+                                                    d="M5.293 7.293a1 1 0 011.414 0L10 10.586l3.293-3.293a1 1 0 111.414 1.414l-4 4a1 1 0 01-1.414 0l-4-4a1 1 0 010-1.414z"
+                                                    clip-rule="evenodd" />
+                                            </svg>
+                                        </button>
+                                    </span>
+                                @endif
+                            </x-slot>
+    
+                            <x-slot name="content">
+                                <!-- Account Management -->
+                                <div class="block px-4 py-2 text-xs text-gray-400">
+                                    {{ __('Administracion') }}
+                                </div>
+    
+                                <x-jet-dropdown-link href="{{ route('users.datosPersonales') }}">
+                                    {{ __('Datos personales') }}
+                                </x-jet-dropdown-link>
+    
+                                <x-jet-dropdown-link href="{{ route('profile.show') }}">
+                                    {{ __('Configuracion') }}
+                                </x-jet-dropdown-link>
+    
+                                @if (Laravel\Jetstream\Jetstream::hasApiFeatures())
+                                    <x-jet-dropdown-link href="{{ route('api-tokens.index') }}">
+                                        {{ __('API Tokens') }}
+                                    </x-jet-dropdown-link>
+                                @endif
+    
+                                <div class="border-t border-gray-100"></div>
+    
+                                <!-- Authentication -->
+                                <form method="POST" action="{{ route('logout') }}">
+                                    @csrf
+    
+                                    <x-jet-dropdown-link href="{{ route('logout') }}"
+                                        onclick="event.preventDefault();
+                                                    this.closest('form').submit();">
+                                        {{ __('Cerrar') }}
+                                    </x-jet-dropdown-link>
+                                </form>
+                            </x-slot>
+                        </x-jet-dropdown>
+                    </div>
+
 </nav>
 <div class="h-20"></div>

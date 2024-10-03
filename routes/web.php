@@ -1,12 +1,15 @@
 <?php
+
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\RoleController;
 use App\Http\Controllers\UserController;
+use App\Http\Controllers\CommentController;
 use App\Http\Controllers\SoporteController;
 use App\Http\Controllers\EntregaRecepcionController;
-use App\Http\Controllers\ForceChangeDefaultPasswordController as FCDP;
 use App\Http\Controllers\UsuarioPendienteController;
+use App\Http\Controllers\ForceChangeDefaultPasswordController as FCDP;
 
 /*
 |--------------------------------------------------------------------------
@@ -51,7 +54,7 @@ Route::middleware(['auth:sanctum', 'verified', 'datos.completos'])->group(functi
     Route::post('/user/bajar', [UserController::class, 'bajar'])->name('users.bajar');
     Route::resource('users', UserController::class)->middleware('register.activity');
     Route::resource('roles', RoleController::class)->names('roles')->middleware('register.activity');
-    Route::resource('calendario', CalendarController::class);
+    //Route::resource('calendario', CalendarController::class);
     Route::resource('soportes', SoporteController::class)->middleware('register.activity');
     // Route::resource('saluds', MiSaludController::class)->middleware('register.activity');
     Route::resource('recepciones', EntregaRecepcionController::class)->names('recepcion')->middleware('register.activity');
@@ -76,3 +79,23 @@ Route::middleware(['auth', 'bloquear.form.datos'])->group(function () {
     Route::post('llenar-datos-personales', [\App\Http\Controllers\DatosPersonalesController::class, 'guardarDatos'])
         ->name('llenar-datos-personales.store');
 });
+
+Route::get('/blog/load-more', [BlogController::class, 'loadMore'])->name('blog.loadMore');
+
+Route::resource('blog', BlogController::class);
+Route::get('/blog/{id}', [BlogController::class, 'show'])->name('blog.show');
+Route::post('/post/{id}/like', [BlogController::class, 'like'])->name('post.like');
+Route::post('/post/{id}/dislike', [BlogController::class, 'dislike'])->name('post.dislike');
+Route::middleware('auth', 'admin')->group(function () {
+    Route::get('/admin/posts', [BlogController::class, 'index_datatable'])->name('admin.posts.index');
+    Route::get('/admin/posts-data', [BlogController::class, 'getData'])->name('admin.posts.data'); 
+    Route::get('/admin/posts/pdf/{id}', [BlogController::class, 'generatePDF'])->name('blog.pdf');
+
+});
+
+Route::post('/posts/{post}/comments', [CommentController::class, 'store'])->name('comments.store');
+Route::delete('/comments/{comment}', [CommentController::class, 'destroy'])->name('comments.destroy');
+
+
+
+

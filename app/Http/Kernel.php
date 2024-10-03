@@ -66,6 +66,7 @@ class Kernel extends HttpKernel
         'bloquear.form.datos' => \App\Http\Middleware\BloquearDatosCompletos::class,
         'check.password' => \App\Http\Middleware\CheckDefaultPassword::class,
         'register.activity' => \App\Http\Middleware\LogUserActivity::class,
-        'UMFRole' =>  \App\Http\Middleware\UMFRole::class
+        'UMFRole' =>  \App\Http\Middleware\UMFRole::class,
+        'admin' => \App\Http\Middleware\Admin::class,
     ];
 }

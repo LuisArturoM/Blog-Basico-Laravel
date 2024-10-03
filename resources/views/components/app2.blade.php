@@ -7,12 +7,14 @@
 
         <title>@yield ('title')</title>
 
+
         <!-- Fonts -->
         <link rel="stylesheet" href={{asset('plugins/googleapis/css2.css')}}>
         <link href={{asset('plugins/tailwind/tailwind.min.css')}} rel="stylesheet">
 
         <!-- Styles -->
         <link rel="stylesheet" href="{{ asset('css/app.css') }}">
+        
         <link rel="stylesheet" href="{{ asset('css/estilos.css') }}">
         <link rel="stylesheet" href="{{ asset('css/preloader.css') }}">
 
@@ -45,7 +47,7 @@
 
             <!-- Page Heading -->
             @if (isset($header))
-                <header class="bg-white shadow">
+                <header>
                     <div class="max-w-7xl mx-auto py-6 px-4 sm:px-6 lg:px-8">
                         {{ $header }}
                     </div>
@@ -55,6 +57,7 @@
             <!-- Page Content -->
             <main>
                 {{ $slot }}
+
             </main>
         </div>
 
@@ -72,9 +75,16 @@
         <script src="{{ asset('js/isotope-layout/isotope.pkgd.min.js') }}"></script>
         <script src="{{ asset('js/swiper/swiper-bundle.min.js') }}"></script>
         <script src="{{ asset('js/jquery-min.js') }}"></script>
+
+        <link rel="stylesheet" href="https://cdn.datatables.net/1.13.3/css/jquery.dataTables.min.css">
+        <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+        <script src="https://cdn.datatables.net/1.13.3/js/jquery.dataTables.min.js"></script>
+
         <script>
             AOS.init();
         </script>
+
+
         <!-- <script type="text/javascript" charset="utf8" src="https://code.jquery.com/jquery-3.5.1.js"></script>
         <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.11.5/js/jquery.dataTables.js"></script>
         

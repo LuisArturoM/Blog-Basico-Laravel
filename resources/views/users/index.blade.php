@@ -399,7 +399,6 @@
         });
     }
 
-      //Actualizar areas select dependiendo la division
     document.getElementById('_division_filtro').addEventListener('change', (e) => {
         fetch(SITEURL + '/areas', {
             method: 'POST',

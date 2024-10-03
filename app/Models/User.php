@@ -75,11 +75,20 @@ class User extends Authenticatable
 
     public function salud()
     {
-        return $this->hasMany(MiSalud::class, 'rpe', 'rpe');
+        //return $this->hasMany(MiSalud::class, 'rpe', 'rpe');
     }
 
     public function enfermedadesCronicas()
     {
-        return $this->hasMany(usuario_enfermedad::class, 'rpe', 'rpe');
+        //return $this->hasMany(usuario_enfermedad::class, 'rpe', 'rpe');
+    }
+
+    public function posts()
+    {
+        return $this->hasMany(Post::class);
+    }
+
+    public function comments(){
+        return $this->hasMany(Comment::class);
     }
 }

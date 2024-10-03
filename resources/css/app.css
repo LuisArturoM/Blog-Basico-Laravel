@@ -1,3 +1,15 @@
 @import 'tailwindcss/base';
 @import 'tailwindcss/components';
 @import 'tailwindcss/utilities';
+
+
+body.dark-theme {
+    background-color: #333;
+    color: white;
+    
+  }
+  
+  body {
+    background-color: #fff;
+    color: #333;
+  }

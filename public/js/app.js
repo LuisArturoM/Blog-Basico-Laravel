@@ -3402,11 +3402,29 @@ var module_default = src_default;
 
 "use strict";
 __webpack_require__.r(__webpack_exports__);
-/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _likeBtn__WEBPACK_IMPORTED_MODULE_0__ = __webpack_require__(/*! ./likeBtn */ "./resources/js/likeBtn.js");
+/* harmony import */ var _theme__WEBPACK_IMPORTED_MODULE_1__ = __webpack_require__(/*! ./theme */ "./resources/js/theme.js");
+/* harmony import */ var alpinejs__WEBPACK_IMPORTED_MODULE_2__ = __webpack_require__(/*! alpinejs */ "./node_modules/alpinejs/dist/module.esm.js");
+/* harmony import */ var _cargarMas__WEBPACK_IMPORTED_MODULE_3__ = __webpack_require__(/*! ./cargarMas */ "./resources/js/cargarMas.js");
+/* harmony import */ var _dataTables__WEBPACK_IMPORTED_MODULE_4__ = __webpack_require__(/*! ./dataTables */ "./resources/js/dataTables.js");
 __webpack_require__(/*! ./bootstrap */ "./resources/js/bootstrap.js");
 
-window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"];
-alpinejs__WEBPACK_IMPORTED_MODULE_0__["default"].start();
+
+
+
+
+
+document.addEventListener('DOMContentLoaded', function () {
+  if (document.querySelector('#load-more-button')) {
+    (0,_cargarMas__WEBPACK_IMPORTED_MODULE_3__.initLoadMoreButton)(); // Cargar mas con AJAX solo si el boton existe
+  }
+  (0,_likeBtn__WEBPACK_IMPORTED_MODULE_0__.initLikeButtons)();
+  if (document.querySelector('#posts-table')) {
+    (0,_dataTables__WEBPACK_IMPORTED_MODULE_4__.initDataTable)(); // Inicializa DataTable
+  }
+});
+window.Alpine = alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"];
+alpinejs__WEBPACK_IMPORTED_MODULE_2__["default"].start();
 
 /***/ }),
 
@@ -3443,6 +3461,192 @@ window.axios.defaults.headers.common['X-Requested-With'] = 'XMLHttpRequest';
 //     cluster: process.env.MIX_PUSHER_APP_CLUSTER,
 //     forceTLS: true
 // });
+
+/***/ }),
+
+/***/ "./resources/js/cargarMas.js":
+/*!***********************************!*\
+  !*** ./resources/js/cargarMas.js ***!
+  \***********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initLoadMoreButton: () => (/* binding */ initLoadMoreButton)
+/* harmony export */ });
+function initLoadMoreButton() {
+  var loadMoreButton = document.querySelector('#load-more-button'); // Asegúrate de que el botón tenga este ID.
+  var currentPage = 2; // Inicia en la página 2, ya que la 1 ya está cargada.
+  var authorId = document.querySelector('#author-select').value; // Asumiendo que hay un select para autor.
+  var loadingSpinner = document.getElementById('loading-spinner'); // Obtener el spinner.
+
+  if (!loadMoreButton) return;
+  loadMoreButton.addEventListener('click', function () {
+    console.log('Cargando más posts...'); // Verificar si se activa el evento
+
+    // Mostrar el spinner
+    loadingSpinner.classList.remove('hidden');
+    fetch("/blog/load-more?page=".concat(currentPage, "&author_id=").concat(authorId)).then(function (response) {
+      return response.json();
+    }).then(function (data) {
+      console.log(data); // Verifica la respuesta de la API
+      var postsContainer = document.querySelector('.posts-container');
+      if (!postsContainer) {
+        throw new Error('No se encontró el contenedor de posts.');
+      }
+      if (data.posts.length > 0) {
+        data.posts.forEach(function (post) {
+          postsContainer.insertAdjacentHTML('beforeend', post);
+        });
+        currentPage++;
+      } else {
+        loadMoreButton.style.display = 'none'; // Oculta el botón si no hay más posts
+      }
+    })["catch"](function (error) {
+      return console.error('Error al cargar más posts:', error);
+    })["finally"](function () {
+      // Ocultar el spinner
+      loadingSpinner.classList.add('hidden');
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/dataTables.js":
+/*!************************************!*\
+  !*** ./resources/js/dataTables.js ***!
+  \************************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initDataTable: () => (/* binding */ initDataTable)
+/* harmony export */ });
+function initDataTable() {
+  $(document).ready(function () {
+    $('#posts-table').DataTable({
+      processing: true,
+      serverSide: true,
+      ajax: {
+        url: '/admin/posts-data',
+        // Cambiar a la ruta correcta
+        type: 'GET'
+      },
+      columns: [{
+        data: 'id',
+        name: 'id'
+      }, {
+        data: 'tittle',
+        name: 'tittle'
+      }, {
+        data: 'user.rpe',
+        name: 'user.rpe'
+      }, {
+        data: null,
+        render: function render(data, type, row) {
+          return "\n                            <form action=\"/blog/".concat(row.id, "\" method=\"POST\" style=\"display:inline;\">\n                                <input type=\"hidden\" name=\"_token\" value=\"").concat($('meta[name="csrf-token"]').attr('content'), "\">\n                                <input type=\"hidden\" name=\"_method\" value=\"DELETE\">\n                                <button type=\"submit\" class=\"btn btn-danger\">Eliminar</button>\n                            </form>\n                            <a href=\"/blog/").concat(row.id, "\" class=\"btn btn-primary\">Ver</a>\n                            <a href=\"/admin/posts/pdf/").concat(row.id, "\" class=\"btn btn-primary\">Generar PDF</a>\n                        ");
+        }
+      }]
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/likeBtn.js":
+/*!*********************************!*\
+  !*** ./resources/js/likeBtn.js ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   initLikeButtons: () => (/* binding */ initLikeButtons)
+/* harmony export */ });
+function initLikeButtons() {
+  // Manejar el evento de click para los botones de "like"
+  document.querySelectorAll('.like-button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var postId = button.getAttribute('data-post-id');
+      fetch("/post/".concat(postId, "/like"), {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        console.log(data);
+        var likeCount = document.getElementById('like-count');
+        var dislikeCount = document.getElementById('dislike-count'); // Obtener el contador de dislikes
+        if (likeCount) likeCount.innerText = data.likes;
+        if (dislikeCount) dislikeCount.innerText = data.dislikes; // Actualizar el contador de dislikes también
+      })["catch"](function (error) {
+        return console.error('Error al dar like:', error);
+      });
+    });
+  });
+
+  // Manejar el evento de click para los botones de "dislike"
+  document.querySelectorAll('.dislike-button').forEach(function (button) {
+    button.addEventListener('click', function () {
+      var postId = button.getAttribute('data-post-id');
+      fetch("/post/".concat(postId, "/dislike"), {
+        method: 'POST',
+        headers: {
+          'X-CSRF-TOKEN': document.querySelector('meta[name="csrf-token"]').getAttribute('content'),
+          'Content-Type': 'application/json'
+        }
+      }).then(function (response) {
+        return response.json();
+      }).then(function (data) {
+        console.log(data);
+        var likeCount = document.getElementById('like-count'); // Obtener el contador de likes
+        var dislikeCount = document.getElementById('dislike-count');
+        if (likeCount) likeCount.innerText = data.likes; // Actualizar el contador de likes
+        if (dislikeCount) dislikeCount.innerText = data.dislikes;
+      })["catch"](function (error) {
+        return console.error('Error al dar dislike:', error);
+      });
+    });
+  });
+}
+
+/***/ }),
+
+/***/ "./resources/js/theme.js":
+/*!*******************************!*\
+  !*** ./resources/js/theme.js ***!
+  \*******************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+/* harmony export */ __webpack_require__.d(__webpack_exports__, {
+/* harmony export */   applySavedTheme: () => (/* binding */ applySavedTheme),
+/* harmony export */   toggleTheme: () => (/* binding */ toggleTheme)
+/* harmony export */ });
+var isDarkTheme = false;
+function toggleTheme() {
+  isDarkTheme = !isDarkTheme;
+  document.body.classList.toggle('dark-theme', isDarkTheme);
+  localStorage.setItem('theme', isDarkTheme ? 'dark' : 'light');
+}
+function applySavedTheme() {
+  var savedTheme = localStorage.getItem('theme');
+  if (savedTheme === 'dark') {
+    isDarkTheme = true;
+    document.body.classList.add('dark-theme');
+  }
+}
+
+// Exportar las funciones para que sean accesibles desde otros archivos
+
 
 /***/ }),
 
@@ -22729,6 +22933,19 @@ var __WEBPACK_AMD_DEFINE_RESULT__;/**
 
 /***/ }),
 
+/***/ "./resources/sass/app.scss":
+/*!*********************************!*\
+  !*** ./resources/sass/app.scss ***!
+  \*********************************/
+/***/ ((__unused_webpack_module, __webpack_exports__, __webpack_require__) => {
+
+"use strict";
+__webpack_require__.r(__webpack_exports__);
+// extracted by mini-css-extract-plugin
+
+
+/***/ }),
+
 /***/ "./resources/css/app.css":
 /*!*******************************!*\
   !*** ./resources/css/app.css ***!
@@ -26186,6 +26403,7 @@ module.exports = axios;
 /******/ 	// Load entry module and return exports
 /******/ 	// This entry module depends on other loaded chunks and execution need to be delayed
 /******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/js/app.js")))
+/******/ 	__webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/sass/app.scss")))
 /******/ 	var __webpack_exports__ = __webpack_require__.O(undefined, ["css/app"], () => (__webpack_require__("./resources/css/app.css")))
 /******/ 	__webpack_exports__ = __webpack_require__.O(__webpack_exports__);
 /******/ 	
